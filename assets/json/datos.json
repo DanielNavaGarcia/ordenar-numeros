@@ -1,0 +1,59 @@
+{
+    "albumes": [
+        {
+            "id": "1",
+            "value": "0",
+            "path": "number_0.png" 
+        },
+        {
+            "id": "2",
+            "value": "1",
+            "path": "number_1.png"
+        },
+        {
+            "id": "3",
+            "value": "2",
+            "path": "number_2.png"
+        },
+        {
+            "id": "4",
+            "value": "3",
+            "path": "number_3.png"
+        },
+        {
+            "id": "5",
+            "value": "4",
+            "path": "number_4.png"
+        },
+        {
+            "id": "6",
+            "value": "5",
+            "path": "number_5.png"
+        },
+        {
+            "id": "7",
+            "value": "6",
+            "path": "number_6.png"
+        },
+        {
+            "id": "8",
+            "value": "7",
+            "path": "number_7.png"
+        },
+        {
+            "id": "9",
+            "value": "8",
+            "path": "number_8.png" 
+        },
+        {
+            "id": "10",
+            "value": "9",
+            "path": "number_9.png"
+        },
+        {
+            "id": "11",
+            "value": "",
+            "path": "flecha.png"
+        }
+    ]
+}
