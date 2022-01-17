@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 body {
-    background-color: activeborder;
+
     text-align: center;
     background-color: #F3FCFF;
     color: #465E76;
@@ -24,6 +24,7 @@ body {
 .cartas-numeros{
     width: 100px;
     height: 100px;
+    border: #465E76 solid;
 
 }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" ng-app="appJuego">
 
 <head>
     <meta charset="UTF-8">
@@ -11,62 +11,63 @@
 
     <title>Juego</title>
 </head>
-<body ng-app="datos_app">
-    <div class="" ng-controller="controlador_datos">
-        <header>
-            <div class="navbar navbar-dark bg-dark d-flex justify-content-around">
-                <button class="btn btn-outline-primary text-light" onclick="history.go(0)">Refresh</button>
-<!--                 <p>
-                    {{puntaje}}🏆
-                </p> -->
-                <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="startGame()">Iniciar el
-                    juego</button>
-            </div>
-        </header>
-        <h1 class="titulo">Quiz de cartas</h1>
-        <div class="col">
-            <div class="center-block">
-                <p>Este va a ser el espacio para "tomar" las cartas</p>
-                <div class="scrolling-wrapper">
-                    <div class="" ng-repeat="divNumbersToPlayWith in divNumbersToPlayWith">
-                        <img class="cartas-numeros" ng-src="assets/img/{{divNumbersToPlayWith.path}}"
-                            ng-click="getANumberID(divNumbersToPlayWith.id); getANumberValue(divNumbersToPlayWith.value)"
-                            alt="">
-                    </div>
-                </div>
-                <p>Este va a ser el espacio para "dejar" las cartas</p>
-                <div class="scrolling-wrapper">
-                    <div class="" ng-repeat="divSpacesToPlaceElements in divSpacesToPlaceElements"
-                        ng-if="divSpacesToPlaceElements.id > 0">
-                        <img class="cartas-numeros" ng-src="assets/img/{{divSpacesToPlaceElements.path}}"
-                            ng-click="getAnswerIndex($index); tryAnswer();" alt="">
-                    </div>
-                </div>
+<body ng-controller="controladorJuego">
+    <header>
+        <div class="navbar navbar-dark bg-dark d-flex justify-content-around">
+            <button class="btn btn-outline-primary text-light" onclick="history.go(0)">Refresh</button>
+            <p>{{counter}}</p>
 
-            </div>
-            <div class="center-block">
-                <div class="scrolling-wrapper">
-                    <div class="" ng-repeat="mistakesCountArr in mistakesCountArr">
-                        <img ng-src="assets/img/{{mistakesCountArr.path}}" class="tache">
-                    </div>
+            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="prepareNextRound()">Siguiente ronda</button>
+
+            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="startGame()">Iniciar el
+                juego</button>
+        </div>
+    </header>
+    <h1 class="titulo">Quiz de cartas</h1>
+    <div class="col">
+        <div class="center-block">
+            <p>Este va a ser el espacio para "tomar" las cartas</p>
+            <div class="scrolling-wrapper">
+                <div class="" ng-repeat="divNumbersToPlayWith in divNumbersToPlayWith">
+                    <img class="cartas-numeros" ng-src="assets/img/{{divNumbersToPlayWith.path}}"
+                        ng-click="getANumberID(divNumbersToPlayWith.id); getANumberValue(divNumbersToPlayWith.value)"
+                        alt="">
                 </div>
             </div>
-<!--             <div>
-                <div>
-                    Atributos RAW correctAnswersSortedArr
-                    <li ng-repeat="correctAnswersSortedArr in correctAnswersSortedArr">
-                        {{correctAnswersSortedArr}}
-                    </li>
+            <p>Este va a ser el espacio para "dejar" las cartas</p>
+            <div class="scrolling-wrapper">
+                <div class="" ng-repeat="divSpacesToPlaceElements in divSpacesToPlaceElements"
+                    ng-if="divSpacesToPlaceElements.id > 0">
+                    <img class="cartas-numeros" ng-src="assets/img/{{divSpacesToPlaceElements.path}}"
+                        ng-click="getAnswerIndex($index); tryAnswer();" alt="">
                 </div>
-                <div>
-                    Atributos RAW divSpacesToPlaceElements
-                    <li ng-repeat="divSpacesToPlaceElements in divSpacesToPlaceElements">
-                        {{divSpacesToPlaceElements}}
-                    </li>
+            </div>
+        </div>
+        <div class="center-block">
+            <div class="scrolling-wrapper">
+                <div class="" ng-repeat="mistakesCountArr in mistakesCountArr">
+                    <img ng-src="assets/img/{{mistakesCountArr.path}}" class="tache">
                 </div>
+            </div>
+        </div>
+        <div class="center-block">
+            <div class="datos">
+<!--                 <p>Resultado anterior</p>
+                <li ng-repeat="scoreArr in scoreArr | filter: 0" >
+                    Tuviste {{scoreArr.Aciertos}} aciertos en {{scoreArr.Tiempo}} segundos con {{scoreArr.Errores}} errores. Tu puntaje es de {{scoreArr.Puntaje}}
+                </li>
             </div> -->
+
+            <div class="datos">
+                <p>Historia de resultados</p>
+                <li ng-repeat="scoreArr in scoreArr">
+                    Tuviste {{scoreArr.Aciertos}} aciertos en {{scoreArr.Tiempo}} segundos con {{scoreArr.Errores}} errores. Tu puntaje es de {{scoreArr.Puntaje}}
+                </li>
+            </div>
         </div>
     </div>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

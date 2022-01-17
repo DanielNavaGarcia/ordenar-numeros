@@ -1,9 +1,9 @@
 {
-    "albumes": [
+    "digitos": [
         {
             "id": "1",
             "value": "0",
-            "path": "number_0.png" 
+            "path": "number_0.png"
         },
         {
             "id": "2",
@@ -43,17 +43,12 @@
         {
             "id": "9",
             "value": "8",
-            "path": "number_8.png" 
+            "path": "number_8.png"
         },
         {
             "id": "10",
             "value": "9",
             "path": "number_9.png"
-        },
-        {
-            "id": "11",
-            "value": "",
-            "path": "flecha.png"
         }
     ]
 }
