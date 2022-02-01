@@ -1,27 +1,26 @@
 let app = angular.module('appJuego', []);
 
 app.controller("controladorJuego", function ($scope, $http) {
-    $scope.randomIDNumbersArr = []; //Arreglo de ID de digitos aleatorios
-    $scope.numberQuantity = 5; // Cantidad de numeros con los que se jugara el juego
-    $scope.numbersInfoArr = []; //Arreglo que contiene ID, valor y ruta de cada numero
-    $scope.correctAnswersSortedArr = []; //Lugar donde siempre esttaran ordenados los datos
-    $scope.mistakesCountArr = [];  //Cantidad de errores que ha tenido el jugador
-    $scope.score = 0; //Puntaje de la ronda
-    $scope.scoreArr = []; //Puntaje que ha llevado a lo largo de las rondas
-    $scope.IsThatNumberInPlace; //Respondio correctamente? - bool
-    $scope.timeToFinish = 8; // Tiempo en segundos que tiene para terminar la ronda
-    $scope.timeSpent = 0; // Tiempo que le tomo la ronda
-    $scope.counter = 0; //Contador en pantalla
-    $scope.numberOfTries = 3; // Maximo de cuantos errores puedes tener
-    $scope.ongoingRound = false; //Hay una ronda en curso? 
-    $scope.divNumbersToPlayWith = []; //PARTE DE ARRIBA
-    $scope.divSpacesToPlaceElements = [];//PARTE DE ABAJO
-    $scope.recoveredNumberValue = 0; //Evento - Recupera el valor del numero
-    $scope.recoveredNumberID = 0; //Evento - Recupera el ID del numero
-    $scope.recoveredAnswerArrayIndex = 0; //Evento - Recupera el lugar dentro del array divSpacesToPlaceElements
+    let randomIDNumbersArr = []; //Arreglo de ID de digitos aleatorios
+    let numberQuantity = 5; // Cantidad de numeros con los que se jugara el juego
+    let numbersInfoArr = []; //Arreglo que contiene ID, valor y ruta de cada numero
+    let correctAnswersSortedArr = []; //Lugar donde siempre esttaran ordenados los datos
+    let score = 0; //Puntaje de la ronda
+    let IsThatNumberInPlace; //Respondio correctamente? - bool
+    let timeToFinish = 8; // Tiempo en segundos que tiene para terminar la ronda
+    let timeSpent = 0; // Tiempo que le tomo la ronda
+    let numberOfTries = 3; // Maximo de cuantos errores puedes tener
+    let isOngoingRound = false; //Hay una ronda en curso? 
+    let recoveredNumberValue = 0; //Evento - Recupera el valor del numero
+    let recoveredNumberID = 0; //Evento - Recupera el ID del numero
+    let recoveredAnswerArrayIndex = 0; //Evento - Recupera el lugar dentro del array divSpacesToPlaceElements
+    let isImageSelected = false; //Se ha seleccionado la imagen de un digito?
 
-    //$scope.prevAnswer;
-    $scope.imageSelected = false;
+    $scope.counter = 0; /* Contador en pantalla */
+    $scope.divNumbersToPlayWith = []; /* PARTE DE ARRIBA */
+    $scope.divSpacesToPlaceElements = []; /* PARTE DE ABAJO */
+    $scope.scoreArr = []; /* Puntaje que ha llevado a lo largo de las rondas */
+    $scope.mistakesCountArr = [];  /* Cantidad de errores que ha tenido el jugador */
 
     //Antes que nada, primero traer el json
     $scope.JsonDataRAWArr = [];
@@ -39,55 +38,57 @@ app.controller("controladorJuego", function ($scope, $http) {
     };
 
     $scope.startGame = function () {
-        if ($scope.ongoingRound == false) {
-            if ($scope.numbersInfoArr.length === 0) {
-                $scope.mergingTwoArrays($scope.numbersInfoArr, $scope.JsonDataRAWArr.digitos); //Pone en otro array el json para no afectar al original
+        if (isOngoingRound == false) {
+            if (numbersInfoArr.length === 0) {
+                $scope.mergingTwoArrays(numbersInfoArr, $scope.JsonDataRAWArr.digitos); //Pone en otro array el json para no afectar al original
             }
-            $scope.scrambleNumbers($scope.randomIDNumbersArr);   //Consigue un arreglo de 5 ID de imagenes
-            $scope.selectSomeNumbers($scope.numbersInfoArr, $scope.randomIDNumbersArr); // Consigue imagenes con ese ID y las revuelve
+            scrambleNumbers(randomIDNumbersArr);   //Consigue un arreglo de 5 ID de imagenes
+            $scope.selectSomeNumbers(numbersInfoArr, randomIDNumbersArr); // Consigue imagenes con ese ID y las revuelve
             $scope.addLessThanSymbol($scope.divSpacesToPlaceElements);  //Prepara el arreglo donde se van a dibujar las respuestas 
-            $scope.counter = $scope.timeToFinish;
+            $scope.counter = timeToFinish;
             $scope.countdown(); //Inicia el contador
-            $scope.ongoingRound = true;
+            isOngoingRound = true;
         }
     };
 
     $scope.tryAnswer = function () {
-        if ($scope.recoveredAnswerArrayIndex % 2 == 1 && $scope.ongoingRound == true && $scope.imageSelected == true) {
-            $scope.evaluateAnswer($scope.divSpacesToPlaceElements, $scope.recoveredAnswerArrayIndex, $scope.recoveredNumberValue);
-            if ($scope.IsThatNumberInPlace === true) {  //Validacion si la respuesta esta bien
-                $scope.deleteElementInArray($scope.recoveredNumberID, $scope.divNumbersToPlayWith, $scope.correctAnswersSortedArr);
-                $scope.sortElementsInArray($scope.correctAnswersSortedArr);
+        if (recoveredAnswerArrayIndex % 2 == 1 && isOngoingRound == true && $scope.isImageSelected == true) {
+            $scope.evaluateAnswer($scope.divSpacesToPlaceElements, recoveredAnswerArrayIndex, recoveredNumberValue);
+            if (IsThatNumberInPlace === true) {  //Validacion si la respuesta esta bien
+                $scope.deleteElementInArray(recoveredNumberID, $scope.divNumbersToPlayWith, correctAnswersSortedArr);
+                $scope.sortElementsInArray(correctAnswersSortedArr);
                 $scope.divSpacesToPlaceElements.length = 0;
-                $scope.mergingTwoArrays($scope.divSpacesToPlaceElements, $scope.correctAnswersSortedArr);
+                $scope.mergingTwoArrays($scope.divSpacesToPlaceElements, correctAnswersSortedArr);
                 $scope.addLessThanSymbol($scope.divSpacesToPlaceElements);
-                $scope.imageSelected = false;
-                if ($scope.correctAnswersSortedArr.length == $scope.numberQuantity) { //ya tiene los x aciertos maximos?
+                $scope.isImageSelected = false;
+                if (correctAnswersSortedArr.length == numberQuantity) { //ya tiene los x aciertos maximos?
                     $scope.calculateScore();
                 }
-            } else if ($scope.IsThatNumberInPlace === false) { //Validacion si la respuesta esta mal
+            } else if (IsThatNumberInPlace === false) { //Validacion si la respuesta esta mal
                 $scope.mistakesCountArr.push({ "path": "X.png" });
-                if ($scope.mistakesCountArr.length === $scope.numberOfTries) { //ya tiene los x errores maximos?
+                if ($scope.mistakesCountArr.length === numberOfTries) { //ya tiene los x errores maximos?
                     $scope.calculateScore();
                 }
             }
-
         }
     };
 
-    $scope.scrambleNumbers = function (randomNumersArr) {
+    let scrambleNumbers = function (randomNumersArr) {
         if (randomNumersArr.length === 0) {
-            for (let i = 0; i < $scope.numberQuantity; i++) { //Cantidad de numeros que van a haber en el juego
-                var newlyGeneratedNumber = Math.round(Math.random() * 10); //Cantidad de digitos que existen
-                var isThisARepeatedNumber = randomNumersArr.includes(newlyGeneratedNumber);
-                if (isThisARepeatedNumber === true || newlyGeneratedNumber === 0) {
-                    i--;
-                } else {
+            let i = 0;
+            while (i < numberQuantity) {
+                let newlyGeneratedNumber = Math.round(Math.random() * 10); //Cantidad de ID que existen
+                let isThisARepeatedNumber = randomNumersArr.includes(newlyGeneratedNumber);
+                //console.log("Este numero: ", "(", newlyGeneratedNumber, ") esta dentro del arreglo", randomNumersArr, " R: ", isThisARepeatedNumber);
+                if (isThisARepeatedNumber !== true && newlyGeneratedNumber != 0) {
                     randomNumersArr.push(newlyGeneratedNumber);
-                };
-            };
-        };
+                    //console.log("push", randomNumersArr);
+                    i++
+                }
+            }
+        }
     };
+
 
     $scope.selectSomeNumbers = function (entirelyArray, filterCriteria) {
         $scope.divNumbersToPlayWith = entirelyArray.filter(element => filterCriteria.includes(parseInt(element.id)));
@@ -129,7 +130,7 @@ app.controller("controladorJuego", function ($scope, $http) {
 
     $scope.sortElementsInArray = function (arrayToOrder) {
         arrayToOrder.sort(function (a, b) {
-            return new Date(a.value) - new Date(b.value);
+            return a.value - b.value;
         });
     };
 
@@ -139,24 +140,27 @@ app.controller("controladorJuego", function ($scope, $http) {
                 numberToBeRemove = hasAnElementToDeleteArr.splice(i, 1)[0];
                 console.log("Elemento que se agrega a las respuestas: ", numberToBeRemove.path);
                 correctAnswersArr.push(numberToBeRemove);
+
+                break;
             }
+
         }
     };
 
     /////////////////// Eventos con clicks
 
     $scope.getANumberValue = function (clickValue) {
-        $scope.recoveredNumberValue = parseInt(clickValue);
-        console.log("Se ha seleccionado el numero con el valor ", $scope.recoveredNumberValue);
-        $scope.imageSelected = true;
+        recoveredNumberValue = parseInt(clickValue);
+        console.log("Se ha seleccionado el numero con el valor ", recoveredNumberValue);
+        $scope.isImageSelected = true;
     };
 
     $scope.getANumberID = function (clickID) {
-        $scope.recoveredNumberID = clickID;
+        recoveredNumberID = clickID;
     };
 
     $scope.getAnswerIndex = function (index) {
-        $scope.recoveredAnswerArrayIndex = parseInt(index);
+        recoveredAnswerArrayIndex = parseInt(index);
     };
 
     /////////////////// Funciones para evaluar 
@@ -164,16 +168,13 @@ app.controller("controladorJuego", function ($scope, $http) {
         let min = (parseInt(originOfTheElement[index - 1].value));
         let max = (parseInt(originOfTheElement[index + 1].value));
         let number = (parseInt(finalAnswer));
-        //if($scope.prevAnswer != $scope.recoveredAnswerArrayIndex){
         if (min < number && number < max) {
-            $scope.IsThatNumberInPlace = true;
+            IsThatNumberInPlace = true;
         } else {
-            $scope.IsThatNumberInPlace = false;
+            IsThatNumberInPlace = false;
         }
-        /* $scope.prevAnswer = parseInt($scope.recoveredAnswerArrayIndex); */
-        console.log(min, ">", finalAnswer, ">", max, ". Es la respuesta correcta?", $scope.IsThatNumberInPlace);
-        return $scope.IsThatNumberInPlace;
-        //}
+        console.log(min, ">", finalAnswer, ">", max, ". Es la respuesta correcta?", IsThatNumberInPlace);
+        return IsThatNumberInPlace;
     };
 
     /////////////////// Cronometro
@@ -181,11 +182,11 @@ app.controller("controladorJuego", function ($scope, $http) {
     $scope.countdown = function () {
         setTimeout(function () {
             $scope.$apply(function () {
-                if ($scope.counter > 0 && $scope.ongoingRound == true) {
+                if ($scope.counter > 0 && isOngoingRound == true) {
                     $scope.counter--;
-                    $scope.timeSpent++;
+                    timeSpent++;
                     $scope.countdown();
-                } else if ($scope.counter === 0 && $scope.ongoingRound == true) {
+                } else if ($scope.counter === 0 && isOngoingRound == true) {
                     $scope.calculateScore(); // aqui debo evitar que lo vuelva a evaluar, chance un if fuera del sitio
                 }
             });
@@ -195,33 +196,31 @@ app.controller("controladorJuego", function ($scope, $http) {
     /////////////////// Calcular puntaje
 
     $scope.calculateScore = function () {
-        if ($scope.correctAnswersSortedArr.length === $scope.numberQuantity) { //Si termino correctamente las preguntas
-            $scope.score = (($scope.correctAnswersSortedArr.length * 20) + (Math.round((($scope.counter) / ($scope.timeToFinish)) * 10)) + Math.round((($scope.numberOfTries - $scope.mistakesCountArr.length / $scope.numberOfTries) * 10)));
-        } else if ($scope.correctAnswersSortedArr.length === 0) {  //No respondio nada bien
-            $scope.score = 0;
+        if (correctAnswersSortedArr.length === numberQuantity) { //Si termino correctamente las preguntas
+            score = ((correctAnswersSortedArr.length * 20) + (Math.round((($scope.counter) / (timeToFinish)) * 10)) + Math.round(((numberOfTries - $scope.mistakesCountArr.length / numberOfTries) * 10)));
+        } else if (correctAnswersSortedArr.length === 0) {  //No respondio nada bien
+            score = 0;
         } else { //Si no termino por tiempo-erroes pero contesto corerectamente algunas preguntas
-            $scope.score = (($scope.correctAnswersSortedArr.length * 20) + Math.round((($scope.numberOfTries - $scope.mistakesCountArr.length / $scope.numberOfTries) * 10)));
+            score = ((correctAnswersSortedArr.length * 20) + Math.round(((numberOfTries - $scope.mistakesCountArr.length / numberOfTries) * 10)));
         }
         //id++;
-        $scope.scoreArr.unshift({ "Aciertos": $scope.correctAnswersSortedArr.length, "Tiempo": $scope.timeSpent, "Errores": $scope.mistakesCountArr.length, "Puntaje": $scope.score });
-        $scope.ongoingRound = false;
+        $scope.scoreArr.unshift({ "Aciertos": correctAnswersSortedArr.length, "Tiempo": timeSpent, "Errores": $scope.mistakesCountArr.length, "Puntaje": score });
+        isOngoingRound = false;
     };
 
-
-
     $scope.prepareNextRound = function () { //Limpia todo
-        $scope.recoveredAnswerArrayIndex = 0;
-        $scope.recoveredNumberValue = 0;
-        $scope.recoveredNumberID = 0;
+        recoveredAnswerArrayIndex = 0;
+        recoveredNumberValue = 0;
+        recoveredNumberID = 0;
         $scope.divSpacesToPlaceElements.length = 0;
         $scope.divNumbersToPlayWith.length = 0;
-        $scope.correctAnswersSortedArr.length = 0;
-        $scope.randomIDNumbersArr.length = 0;
-        $scope.timeSpent = 0;
+        correctAnswersSortedArr.length = 0;
+        randomIDNumbersArr.length = 0;
+        timeSpent = 0;
         $scope.mistakesCountArr.length = 0;
-        $scope.imageSelected = false;
+        $scope.isImageSelected = false;
         $scope.startGame();
-    }
+    };
 
     //Start
     $scope.importFromJson();

@@ -16,21 +16,23 @@
         <div class="navbar navbar-dark bg-dark d-flex justify-content-around">
             <button class="btn btn-outline-primary text-light" onclick="history.go(0)">Refresh</button>
             <button class="btn btn-outline-primary text-light">{{counter}}</button>
+            
 
-            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="prepareNextRound()">Siguiente ronda</button>
+            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="prepareNextRound();">Siguiente ronda</button>
 
-            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="startGame()">Iniciar el
+            <button id="contador_boton" class="btn btn-outline-primary text-light" ng-click="startGame();">Iniciar el
                 juego</button>
         </div>
     </header>
     <h1 class="titulo">Quiz de cartas</h1>
     <div class="col">
+        <button id="btnMensaje">owo</button>
         <div class="center-block">
             <p>Este va a ser el espacio para "tomar" las cartas</p>
             <div class="scrolling-wrapper">
                 <div class="" ng-repeat="divNumbersToPlayWith in divNumbersToPlayWith">
                     <img class="cartas-numeros" ng-src="assets/img/{{divNumbersToPlayWith.path}}"
-                        ng-click="getANumberID(divNumbersToPlayWith.id); getANumberValue(divNumbersToPlayWith.value)"
+                        ng-click="getANumberID(divNumbersToPlayWith.id); getANumberValue(divNumbersToPlayWith.value);"
                         alt="">
                 </div>
             </div>
